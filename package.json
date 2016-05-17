@@ -1,0 +1,21 @@
+{
+  "name": "new_wechat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "crypto": "0.0.3",
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "html": "0.0.10",
+    "http": "0.0.0",
+    "path": "^0.12.7",
+    "qs": "^6.2.0",
+    "url": "^0.11.0"
+  }
+}
