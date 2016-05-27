@@ -4,6 +4,8 @@ var url = require('url');
 var crypto = require('crypto');
 
 var TOKEN = "sspku";
+var getUserInfo = require('./lib/user').getUserInfo;
+var replyText = require('./lib/reply').replyText;
 
 function checkSignature(params,token){
     //1.将token、timestamp、nonce三个参数进行字典序排序
@@ -18,17 +20,40 @@ function checkSignature(params,token){
 }
 
 var server = http.createServer(function(request,response){
-    console.log("request.url:  "+request.url);
-    var query = url.parse(request.url).query;//?后面的内容
-    console.log("query: "+query);
-    var params = qs.parse(query);
-    console.log("params: "+params);
 
-    if(checkSignature(params,TOKEN)){
-        response.end(params.echostr);////若确认此次GET请求来自微信服务器，请原样返回echostr参数内容，则接入生效，成为开发者成功
-    }else{
+    var query = url.parse(request.url).query;//?后面的内容
+    var params = qs.parse(query);
+
+    if(!checkSignature(params,TOKEN)){
         response.end('校验失败');
     }
+    if(request.method == "GET"){
+        //get请求，返回echostr用于通过服务器有效校验
+        response.end(params.echostr);
+    }
+    else{//post请求，微信发给开发者服务器
+        var postdata = "";
+        request.addListener("data",function(postchunk){
+            postdata += postchunk;
+        });
+        request.addListener("end",function(){
+            var parseString = require('xml2js').parseString;
+            parseString(postdata,function(err,result){
+                if(!err){
+                    //if(result.xml.MsgType[0] === 'text'){
+                    //    var userInfo = getUserInfo(result.xml.FromUserName[0]);
+                    //    console.log('index.js_____userInfo______'+userInfo);
+                    //    result.user = userInfo;
+                    //
+                    //}
+                    var res = replyText(result,"消息推送成功！");
+                    response.end(res);
+                }
+            });
+
+        });
+    }
+
 });
-server.listen(3001);
-console.log('server running at port 3001');
+server.listen(9529);
+console.log('server running at port 9529');
