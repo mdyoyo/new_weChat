@@ -46,6 +46,7 @@ var server = http.createServer(function(request,response){
                     //    result.user = userInfo;
                     //
                     //}
+                    console.log("index.js______json result___"+result);
                     var res = replyText(result,"消息推送成功！");
                     response.end(res);
                 }
