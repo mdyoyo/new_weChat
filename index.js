@@ -2,6 +2,13 @@ var http = require('http');
 var qs = require('qs');//url参数字符串和参数对象的转换
 var url = require('url');
 var crypto = require('crypto');
+var later = require('later');
+var https = require('https');
+var fs = require('fs');
+
+var appID = require('./lib/config').appID;
+var appSecret = require('./lib/config').appSecret;
+var access_token;
 
 var TOKEN = "sspku";
 var getUserInfo = require('./lib/user').getUserInfo;
@@ -59,3 +66,47 @@ var server = http.createServer(function(request,response){
 });
 server.listen(9529);
 console.log('server running at port 9529');
+
+later.date.localTime();
+console.log("Now_____"+ new Date());
+
+var sched =  later.parse.recur().every(2).hour();//每隔两小时
+next = later.schedule(sched).next(10);
+console.log("next______");
+console.log(next);
+
+var timer = later.setInterval(test,sched);
+setTimeout(test,2000);
+
+function test(){
+    console.log("test()______" + new Date());
+    var options = {
+        hostname: 'api.weixin.qq.com',
+        path: '/cgi-bin/token?' +
+        'grant_type=client_credential' +
+        '&appid=' + appID +
+        '&secret=' + appSecret
+    };
+    var req = https.get(options,function(res){
+        var bodyChunks = '';
+        res.on('data',function(chunk){
+            bodyChunks += chunk;
+        });
+        res.on('end', function () {
+            var body = JSON.parse(bodyChunks);
+            //console.dir(body);
+            if (body.access_token) {
+                access_token = body.access_token;
+
+                console.log(access_token);
+                //缓存token
+                fs.writeFileSync('token.dat',JSON.stringify(access_token));
+            } else {
+                console.dir(body);
+            }
+        });
+    });
+    req.on('error', function (e) {
+        console.log('ERROR: ' + e.message);
+    });
+}
