@@ -2,21 +2,15 @@ var http = require('http');
 var qs = require('qs');//url参数字符串和参数对象的转换
 var url = require('url');
 var crypto = require('crypto');
-<<<<<<< HEAD
 
 var later = require('later');
 var https = require('https');
 var fs = require('fs');
 
-var app = require('express')();
-var http2 = require('http').Server(app);
-var io = require('socket.io')(http2);
-
+var io = require('./lib/ioo.js').io;
 var appID = require('./lib/config').appID;
 var appSecret = require('./lib/config').appSecret;
 var access_token;
-=======
->>>>>>> parent of 4b655dd... 2
 
 var TOKEN = "sspku";
 var getUserInfo = require('./lib/user').getUserInfo;
@@ -63,7 +57,7 @@ var server = http.createServer(function(request,response){
                     //}
                     console.log("index.js______json result___");
                     console.log(result);
-
+                    io.broadcast(result);
                     var res = replyText(result,"消息推送成功！");
                     response.end(res);
                 }
@@ -74,19 +68,13 @@ var server = http.createServer(function(request,response){
 
 });
 server.listen(9529);
-<<<<<<< HEAD
 console.log('server running at port 9529');
 
+var app = require('express')();
+var http2 = require('http').Server(app);
 /*页面*/
 app.get('/',function(req,res){
-    res.sendFile('index.html');
-});
-io.on('connection',function(socket){
-    console.log('a user connected');
-    socket.on('new message',function(msg){
-        console.log('message: '+msg);
-        io.emit('new message',msg);
-    });
+    res.sendfile('index2.html');
 });
 app.set('port',process.env.PORT || 9902);
 var server2 =  http2.listen(app.get('port'),function(){
@@ -138,6 +126,4 @@ function test(){
         console.log('ERROR: ' + e.message);
     });
 }
-=======
-console.log('server running at port 9529');
->>>>>>> parent of 4b655dd... 2
+
