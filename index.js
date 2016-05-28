@@ -2,6 +2,7 @@ var http = require('http');
 var qs = require('qs');//url参数字符串和参数对象的转换
 var url = require('url');
 var crypto = require('crypto');
+<<<<<<< HEAD
 
 var later = require('later');
 var https = require('https');
@@ -14,6 +15,8 @@ var io = require('socket.io')(http2);
 var appID = require('./lib/config').appID;
 var appSecret = require('./lib/config').appSecret;
 var access_token;
+=======
+>>>>>>> parent of 4b655dd... 2
 
 var TOKEN = "sspku";
 var getUserInfo = require('./lib/user').getUserInfo;
@@ -71,6 +74,7 @@ var server = http.createServer(function(request,response){
 
 });
 server.listen(9529);
+<<<<<<< HEAD
 console.log('server running at port 9529');
 
 /*页面*/
@@ -134,3 +138,6 @@ function test(){
         console.log('ERROR: ' + e.message);
     });
 }
+=======
+console.log('server running at port 9529');
+>>>>>>> parent of 4b655dd... 2
