@@ -2,9 +2,14 @@ var http = require('http');
 var qs = require('qs');//url参数字符串和参数对象的转换
 var url = require('url');
 var crypto = require('crypto');
+
 var later = require('later');
 var https = require('https');
 var fs = require('fs');
+
+var app = require('express')();
+var http2 = require('http').Server(app);
+var io = require('socket.io')(http2);
 
 var appID = require('./lib/config').appID;
 var appSecret = require('./lib/config').appSecret;
@@ -55,6 +60,7 @@ var server = http.createServer(function(request,response){
                     //}
                     console.log("index.js______json result___");
                     console.log(result);
+
                     var res = replyText(result,"消息推送成功！");
                     response.end(res);
                 }
@@ -67,6 +73,24 @@ var server = http.createServer(function(request,response){
 server.listen(9529);
 console.log('server running at port 9529');
 
+/*页面*/
+app.get('/',function(req,res){
+    res.sendFile('index.html');
+});
+io.on('connection',function(socket){
+    console.log('a user connected');
+    socket.on('new message',function(msg){
+        console.log('message: '+msg);
+        io.emit('new message',msg);
+    });
+});
+app.set('port',process.env.PORT || 9902);
+var server2 =  http2.listen(app.get('port'),function(){
+    console.log('start at port:' + server2.address().port);
+});
+
+
+/*定时器*/
 later.date.localTime();
 console.log("Now_____"+ new Date());
 
