@@ -101,7 +101,7 @@ server.listen(9529);
 console.log('server running at port 9529');
 
 app.get('/', function(req, res){
-    res.sendfile('index2.html');
+    res.sendfile('index.html');
 });
 io.on('connection', function(socket){
     console.log('a user connected');
