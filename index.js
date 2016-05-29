@@ -13,6 +13,7 @@ var io = require('socket.io')(http2);
 
 var appID = require('./lib/config').appID;
 var appSecret = require('./lib/config').appSecret;
+var getToken = require('./lib/token').getToken;
 var access_token;
 
 var TOKEN = "sspku";
@@ -53,15 +54,40 @@ var server = http.createServer(function(request,response){
             parseString(postdata,function(err,result){
                 if(!err){
                     if(result.xml.MsgType[0] === 'text'){
-                        var userInfo = getUserInfo(result.xml.FromUserName[0]);
-                        console.log('1index.js_____userInfo______');
-                        console.log(userInfo);
-                        result.user = userInfo;
-                        console.log("2index.js______json result___");
-                        console.log(result);
-                        io.broadcast(result);
-                        var res = replyText(result,"消息推送成功！");
-                        response.end(res);
+                        var token = getToken(appID, appSecret);
+                        console.log("token is _____"+token);
+                        var options = {
+                            hostname: 'api.weixin.qq.com',
+                            path: '/cgi-bin/user/info?' +
+                            'access_token=' + token +
+                            '&openid=' + openId +
+                            '&lang=zh_CN'
+                        };
+                        var req = https.get(options,function(res){
+                            var bodyChunks = '';
+                            res.on('data',function(chunk){
+                                bodyChunks += chunk;
+                            });
+                            res.on('end',function(){
+                                var userInfo = JSON.parse(bodyChunks);
+                                console.log('0getUserInfo______data');
+                                console.log(userInfo);
+//                                var userInfo = getUserInfo(result.xml.FromUserName[0]);
+                                console.log('1index.js_____userInfo______');
+                                //console.log(userInfo);
+                                result.user = userInfo;
+                                console.log("2index.js______json result___");
+                                console.log(result);
+                                io.broadcast(result);
+                                var resp = replyText(result,"消息推送成功！");
+                                response.end(resp);
+
+                            })
+                        });
+                        req.on('error', function (e) {
+                            console.log('ERROR: ' + e.message);
+                        });
+
                     }
 
                 }
