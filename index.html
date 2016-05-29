@@ -59,7 +59,7 @@
         }else if(msg.msgType==2){
             var msgImg = msg.xml.PicUrl[0];
             var mediaId = msg.xml.MediaId[0];
-            var iUrl = '/'+msgImg+'.jpg';
+            var iUrl = '/'+mediaId+'.jpg';
             console.log(iUrl);
             element1.innerHTML = '<table> <tr> <td>' +
                     '<img src="'+ headimg +'"></td> ' +
