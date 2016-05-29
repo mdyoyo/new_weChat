@@ -60,14 +60,15 @@ var server = http.createServer(function(request,response){
                     //收到用户的图片消息
                     else if(result.xml.MsgType[0] === 'image'){
                         result.msgType=2;//image
-                        console.log(result.xml.MediaId[0]);
+                        var mediaId = result.xml.MediaId[0];
+                        console.log(mediaId);
                         console.log(result.xml.PicUrl[0]);
 
                         var getImgOptions = {
                             hostname: 'api.weixin.qq.com',
                             path: '/cgi-bin/media/get?' +
                             'access_token=' + token +
-                            '&media_id=' + result.xml.MediaId[0]
+                            '&media_id=' + mediaId
                         };
                         //向微信服务器发送请求，得到用户信息
                         var reqImg = https.get(getImgOptions,function(res){
@@ -77,7 +78,8 @@ var server = http.createServer(function(request,response){
                             });
                             res.on('end',function(){
 //                                var imgInfo = JSON.parse(bodyChunks);
-                                console.log(bodyChunks);
+//                                console.log(bodyChunks);
+                                fs.writeFileSync('/public/'+mediaId+'.jpg',bodyChunks);
                             })
                         });
                         reqImg.on('error', function (e) {
