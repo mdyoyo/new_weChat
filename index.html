@@ -16,21 +16,24 @@
     </style>
 </head>
 <body>
-<div id="msg">
+<div id="wxWall">
     <div style="text-align: center;">
         <h3 style="color: #ac2925;">微信墙</h3>
     </div>
-    <div class="well">
-        <img src="http://wx.qlogo.cn/mmopen/LdL5tuia2rkziaSR3PB0khvicyEIdNVHzUL0NFcAkavIibIokia9ibwCia744unz7VlsM6rIus50LrILaWM3dCoIePbCPusI19zGF3w/0">
-        说：大家好
+    <div id="msg">
+        <div class="well">
+            <img src="http://wx.qlogo.cn/mmopen/LdL5tuia2rkziaSR3PB0khvicyEIdNVHzUL0NFcAkavIibIokia9ibwCia744unz7VlsM6rIus50LrILaWM3dCoIePbCPusI19zGF3w/0">
+            说：大家好
+        </div>
     </div>
+
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script type="text/javascript">
 
     var socket = io();
-    var msglist = document.getElementById('msg');
+//    var msglist = document.getElementById('msg');
     socket.on('chat message', function(data) {
         var msg = JSON.parse(data);
         var content = msg.xml.Content[0];
@@ -52,7 +55,7 @@
                 '<td style="text-align: center;color: #660000">'+ userName +'</td> ' +
                 '<td>说：'+ content +'</td> </tr> </table>';
 //        msglist.appendChild(element1);
-        msglist.prependChild(element1);
+        $('#msg').prepend(element1);
     });
 
 
