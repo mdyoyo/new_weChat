@@ -17,7 +17,6 @@ var getToken = require('./lib/token').getToken;
 var access_token;
 
 var TOKEN = "sspku";
-var getUserInfo = require('./lib/user').getUserInfo;
 var replyText = require('./lib/reply').replyText;
 
 function checkSignature(params,token){
@@ -53,44 +52,39 @@ var server = http.createServer(function(request,response){
             var parseString = require('xml2js').parseString;
             parseString(postdata,function(err,result){
                 if(!err){
+                    //收到用户的文本消息
                     if(result.xml.MsgType[0] === 'text'){
-                        console.log(result.xml.CreateTime[0]);
-                        var token = getToken(appID, appSecret);
-                        console.log("token is _____"+token);
-                        var options = {
-                            hostname: 'api.weixin.qq.com',
-                            path: '/cgi-bin/user/info?' +
-                            'access_token=' + token +
-                            '&openid=' + result.xml.FromUserName[0] +
-                            '&lang=zh_CN'
-                        };
-                        var req = https.get(options,function(res){
-                            var bodyChunks = '';
-                            res.on('data',function(chunk){
-                                bodyChunks += chunk;
-                            });
-                            res.on('end',function(){
-                                var userInfo = JSON.parse(bodyChunks);
-                                console.log('0getUserInfo______data');
-//                                console.log(userInfo);
-//                                var userInfo = getUserInfo(result.xml.FromUserName[0]);
-                                console.log('1index.js_____userInfo______');
-                                //console.log(userInfo);
-                                result.user = userInfo;
-                                console.log("2index.js______json result___");
-//                                console.log(result);
-                                io.broadcast(result);
-                                var resp = replyText(result,"消息推送成功！");
-                                response.end(resp);
-
-                            })
-                        });
-                        req.on('error', function (e) {
-                            console.log('ERROR: ' + e.message);
-                        });
-
+                        result.msgType=1;//text
                     }
-
+                    //收到用户的图片消息
+                    else if(result.xml.MsgType[0] === 'image'){
+                        result.msgType=2;//image
+                    }
+                    var token = getToken(appID, appSecret);//得到access_token
+                    var options = {
+                        hostname: 'api.weixin.qq.com',
+                        path: '/cgi-bin/user/info?' +
+                        'access_token=' + token +
+                        '&openid=' + result.xml.FromUserName[0] +
+                        '&lang=zh_CN'
+                    };
+                    //向微信服务器发送请求，得到用户信息
+                    var req = https.get(options,function(res){
+                        var bodyChunks = '';
+                        res.on('data',function(chunk){
+                            bodyChunks += chunk;
+                        });
+                        res.on('end',function(){
+                            var userInfo = JSON.parse(bodyChunks);
+                            result.user = userInfo;//用户信息
+                            io.broadcast(result);//广播到每个client
+                            var resp = replyText(result,"消息推送成功！");
+                            response.end(resp);//在公众号内回复给用户
+                        })
+                    });
+                    req.on('error', function (e) {
+                        console.log('ERROR: ' + e.message);
+                    });
                 }
             });
 
