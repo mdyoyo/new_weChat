@@ -36,9 +36,10 @@
         var content = msg.xml.Content[0];
         var create_time = msg.xml.CreateTime[0];
         var date = new Date(create_time);
-        var theDate = date.toLocaleString();
-        console.log(theDate);
-
+//        var theDate = date.toLocaleString();
+        console.log(date);
+alert(date.toLocaleString());
+        
         msg.user = msg.user || {};
         var userName = msg.user.nickname;
         var headimg = msg.user.headimgurl;
