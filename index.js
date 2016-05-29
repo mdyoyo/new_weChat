@@ -52,6 +52,7 @@ var server = http.createServer(function(request,response){
             var parseString = require('xml2js').parseString;
             parseString(postdata,function(err,result){
                 if(!err){
+                    var token = getToken(appID, appSecret);//得到access_token
                     //收到用户的文本消息
                     if(result.xml.MsgType[0] === 'text'){
                         result.msgType=1;//text
@@ -61,8 +62,29 @@ var server = http.createServer(function(request,response){
                         result.msgType=2;//image
                         console.log(result.xml.MediaId[0]);
                         console.log(result.xml.PicUrl[0]);
+
+                        var getImgOptions = {
+                            hostname: 'api.weixin.qq.com',
+                            path: '/cgi-bin/media/get?' +
+                            'access_token=' + token +
+                            '&media_id=' + result.xml.MediaId[0]
+                        };
+                        //向微信服务器发送请求，得到用户信息
+                        var reqImg = https.get(getImgOptions,function(res){
+                            var bodyChunks = '';
+                            res.on('data',function(chunk){
+                                bodyChunks += chunk;
+                            });
+                            res.on('end',function(){
+                                var imgInfo = JSON.parse(bodyChunks);
+                                console.log(imgInfo);
+                            })
+                        });
+                        reqImg.on('error', function (e) {
+                            console.log('ERROR: ' + e.message);
+                        });
                     }
-                    var token = getToken(appID, appSecret);//得到access_token
+//                    var token = getToken(appID, appSecret);//得到access_token
                     var options = {
                         hostname: 'api.weixin.qq.com',
                         path: '/cgi-bin/user/info?' +
