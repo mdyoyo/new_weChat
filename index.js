@@ -79,7 +79,7 @@ var server = http.createServer(function(request,response){
                             res.on('end',function(){
 //                                var imgInfo = JSON.parse(bodyChunks);
 //                                console.log(bodyChunks);
-                                fs.writeFileSync(mediaId+'.jpg',bodyChunks);
+                                fs.writeFileSync('public/'+mediaId+'.jpg',bodyChunks);
                             })
                         });
                         reqImg.on('error', function (e) {

@@ -58,11 +58,13 @@
                     '<td>说：'+ content +'</td> </tr> </table>';
         }else if(msg.msgType==2){
             var msgImg = msg.xml.PicUrl[0];
+            var mediaId = msg.xml.MediaId[0];
+
             element1.innerHTML = '<table> <tr> <td>' +
                     '<img src="'+ headimg +'"></td> ' +
                     '<td>'+ theDate+ '&nbsp;&nbsp;&nbsp; </td> ' +
                     '<td style="text-align: center;color: #660000">'+ userName +'</td> ' +
-                    '<td>说：<img src="'+ msgImg +'"></td> </tr> </table>';
+                    '<td>说：<img src=//"'+ mediaId +'.jpg"></td> </tr> </table>';
         }
 
 //        msglist.appendChild(element1);
