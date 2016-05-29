@@ -52,12 +52,12 @@ var server = http.createServer(function(request,response){
             var parseString = require('xml2js').parseString;
             parseString(postdata,function(err,result){
                 if(!err){
-                    //if(result.xml.MsgType[0] === 'text'){
-                    //    var userInfo = getUserInfo(result.xml.FromUserName[0]);
-                    //    console.log('index.js_____userInfo______'+userInfo);
-                    //    result.user = userInfo;
-                    //
-                    //}
+                    if(result.xml.MsgType[0] === 'text'){
+                        var userInfo = getUserInfo(result.xml.FromUserName[0]);
+                        console.log('index.js_____userInfo______'+userInfo);
+                        result.user = userInfo;
+
+                    }
                     console.log("index.js______json result___");
                     console.log(result);
                     io.broadcast(result);
@@ -80,7 +80,7 @@ io.on('connection', function(socket){
     console.log('a user connected');
     //io.sockets.server.eio.clientsCount
 //    console.log(io.engine.clients);//io.sockets.connected
-    console.log(io.sockets.server.eio.clientsCount);//客户端数量
+//    console.log(io.sockets.server.eio.clientsCount);//客户端数量
     socket.on('chat message', function(msg){
         console.log('message: ' + msg);
         io.emit('chat message', msg);
