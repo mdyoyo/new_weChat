@@ -37,10 +37,13 @@
 
         var create_time = msg.xml.CreateTime[0];
         console.log(create_time);
+        console.log(parseInt(create_time));
+        console.log(parseInt('1464522716'));
+
         var date = new Date(1460385054);
 //      var theDate = date.toLocaleString();parseInt(create_time)
         console.log(date);
-alert(date.toLocaleString());
+        alert(date.toLocaleString());
 
         msg.user = msg.user || {};
         var userName = msg.user.nickname;

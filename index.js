@@ -72,13 +72,13 @@ var server = http.createServer(function(request,response){
                             res.on('end',function(){
                                 var userInfo = JSON.parse(bodyChunks);
                                 console.log('0getUserInfo______data');
-                                console.log(userInfo);
+//                                console.log(userInfo);
 //                                var userInfo = getUserInfo(result.xml.FromUserName[0]);
                                 console.log('1index.js_____userInfo______');
                                 //console.log(userInfo);
                                 result.user = userInfo;
                                 console.log("2index.js______json result___");
-                                console.log(result);
+//                                console.log(result);
                                 io.broadcast(result);
                                 var resp = replyText(result,"消息推送成功！");
                                 response.end(resp);
