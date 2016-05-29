@@ -104,7 +104,7 @@ var path = require('path');
 app.use(require('express').static(path.join(__dirname,'public')));
 
 app.get('/', function(req, res){
-    res.sendfile('index_tmp.html');
+    res.sendfile('index.html');
 });
 io.on('connection', function(socket){
     console.log('a user connected');

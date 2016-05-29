@@ -34,14 +34,29 @@
     socket.on('chat message', function(data) {
         var msg = JSON.parse(data);
         var content = msg.xml.Content[0];
+        var create_time = msg.xml.CreateTime[0];
+        var date = new Date(create_time);
+        var theDate = date.toLocaleString();
+        console.log(theDate);
+
         msg.user = msg.user || {};
         var userName = msg.user.nickname;
         var headimg = msg.user.headimgurl;
+
         var element1 = document.createElement('div');
         element1.className = 'well';
-        element1.innerHTML = '<img src="' + headimg + '">' + '说：' + content;
+//        element1.innerHTML = '<img src="' + headimg + '">' + '说：' + content;
+        element1.innerHTML = '<table> <tr> <td> ' +
+                '<img src="'+ headimg +'"></td> ' +
+                '<td>2016年5月28日15:20 &nbsp;&nbsp; </td> ' +
+                '<td style="text-align: center;color: #660000">'+ userName +'</td> ' +
+                '<td>说：'+ content +'</td> </tr> </table>';
         msglist.appendChild(element1);
-
+//        var s='<table> <tr> <td> ' +
+//            '<img src="'+ headimg +'"></td> ' +
+//            '<td>2016年5月28日15:20 &nbsp;&nbsp; </td> ' +
+//            '<td style="text-align: center;color: #660000">'+ userName +'</td> ' +
+//            '<td>说：'+ content +'</td> </tr> </table>';
 //        $('#messages').append($('<li>').text(msg.xml.Content[0]));
 //        $('#messages').append($('<li>').text(msg.user.nickname));
     });
