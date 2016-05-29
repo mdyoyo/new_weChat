@@ -59,8 +59,8 @@ var server = http.createServer(function(request,response){
                     //收到用户的图片消息
                     else if(result.xml.MsgType[0] === 'image'){
                         result.msgType=2;//image
+                        console.log(result.xml.MediaId[0]);
                         console.log(result.xml.PicUrl[0]);
-                        console.log(result.xml.PicUrl);
                     }
                     var token = getToken(appID, appSecret);//得到access_token
                     var options = {
