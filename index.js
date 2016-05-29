@@ -100,6 +100,9 @@ var server = http.createServer(function(request,response){
 server.listen(9529);
 console.log('server running at port 9529');
 
+var path = require('path');
+app.use(require('express').static(path.join(__dirname,'public')));
+
 app.get('/', function(req, res){
     res.sendfile('index.html');
 });
