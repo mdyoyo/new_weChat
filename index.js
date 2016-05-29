@@ -7,7 +7,10 @@ var later = require('later');
 var https = require('https');
 var fs = require('fs');
 
-var io = require('./lib/ioo.js').io;
+var app = require('express')();
+var http2 = require('http').Server(app);
+var io = require('socket.io')(http2);
+
 var appID = require('./lib/config').appID;
 var appSecret = require('./lib/config').appSecret;
 var access_token;
@@ -70,15 +73,26 @@ var server = http.createServer(function(request,response){
 server.listen(9529);
 console.log('server running at port 9529');
 
-var app = require('express')();
-var http2 = require('http').Server(app);
-/*页面*/
-app.get('/',function(req,res){
+app.get('/', function(req, res){
     res.sendfile('index2.html');
 });
-app.set('port',process.env.PORT || 9902);
-var server2 =  http2.listen(app.get('port'),function(){
-    console.log('start at port:' + server2.address().port);
+io.on('connection', function(socket){
+    console.log('a user connected');
+    //io.sockets.server.eio.clientsCount
+//    console.log(io.engine.clients);//io.sockets.connected
+    console.log(io.sockets.server.eio.clientsCount);//客户端数量
+    socket.on('chat message', function(msg){
+        console.log('message: ' + msg);
+        io.emit('chat message', msg);
+    });
+});
+io.broadcast = function broadcast(data) {
+    console.log("io.broadcast向所有广播");
+    io.sockets.emit('chat message', JSON.stringify(data));//向所有客户端发送
+};
+app.set('port', process.env.PORT || 9902);
+var server2 = http.listen(app.get('port'), function() {
+    console.log('start at port:' + server.address().port);
 });
 
 
