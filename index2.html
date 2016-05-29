@@ -31,8 +31,9 @@
         return false;
     });
 
-    socket.on('chat message', function(msg){
-        $('#messages').append($('<li>').text(msg));
+    socket.on('chat message', function(data){
+        var msg = JSON.parse(data);
+        $('#messages').append($('<li>').text(msg.xml.Content[0]));
     });
 </script>
 </body>
