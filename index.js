@@ -91,8 +91,8 @@ io.broadcast = function broadcast(data) {
     io.sockets.emit('chat message', JSON.stringify(data));//向所有客户端发送
 };
 app.set('port', process.env.PORT || 9902);
-var server2 = http.listen(app.get('port'), function() {
-    console.log('start at port:' + server.address().port);
+var server2 = http2.listen(app.get('port'), function() {
+    console.log('start at port:' + server2.address().port);
 });
 
 
