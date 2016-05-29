@@ -36,14 +36,8 @@
         var content = msg.xml.Content[0];
 
         var create_time = msg.xml.CreateTime[0];
-        console.log(create_time);
-        console.log(parseInt(create_time));
-        console.log(new Date(parseInt('1464522716')*1000));//1464523658216
-
         var date = new Date(parseInt(create_time)*1000);
-//      var theDate = date.toLocaleString();parseInt(create_time)
-        console.log(date);
-        alert(date.toLocaleString());
+        var theDate = date.toLocaleString();
 
         msg.user = msg.user || {};
         var userName = msg.user.nickname;
@@ -54,7 +48,7 @@
 //        element1.innerHTML = '<img src="' + headimg + '">' + '说：' + content;
         element1.innerHTML = '<table> <tr> <td> ' +
                 '<img src="'+ headimg +'"></td> ' +
-                '<td>2016年5月28日15:20 &nbsp;&nbsp; </td> ' +
+                '<td>'+ theDate +'</td> ' +
                 '<td style="text-align: center;color: #660000">'+ userName +'</td> ' +
                 '<td>说：'+ content +'</td> </tr> </table>';
         msglist.appendChild(element1);
