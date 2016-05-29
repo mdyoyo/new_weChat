@@ -54,7 +54,8 @@ var server = http.createServer(function(request,response){
                 if(!err){
                     if(result.xml.MsgType[0] === 'text'){
                         var userInfo = getUserInfo(result.xml.FromUserName[0]);
-                        console.log('index.js_____userInfo______'+userInfo);
+                        console.log('index.js_____userInfo______');
+                        console.log(userInfo);
                         result.user = userInfo;
 
                     }
