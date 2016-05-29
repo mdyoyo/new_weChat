@@ -45,20 +45,14 @@
 
         var element1 = document.createElement('div');
         element1.className = 'well';
-//        element1.innerHTML = '<img src="' + headimg + '">' + '说：' + content;
+
         element1.innerHTML = '<table> <tr> <td> ' +
                 '<img src="'+ headimg +'"></td> ' +
-                '<td>'+ theDate +'</td> ' +
+                '<td>'+ theDate+ '&nbsp;&nbsp;&nbsp; </td> ' +
                 '<td style="text-align: center;color: #660000">'+ userName +'</td> ' +
                 '<td>说：'+ content +'</td> </tr> </table>';
-        msglist.appendChild(element1);
-//        var s='<table> <tr> <td> ' +
-//            '<img src="'+ headimg +'"></td> ' +
-//            '<td>2016年5月28日15:20 &nbsp;&nbsp; </td> ' +
-//            '<td style="text-align: center;color: #660000">'+ userName +'</td> ' +
-//            '<td>说：'+ content +'</td> </tr> </table>';
-//        $('#messages').append($('<li>').text(msg.xml.Content[0]));
-//        $('#messages').append($('<li>').text(msg.user.nickname));
+//        msglist.appendChild(element1);
+        msglist.prependChild(element1);
     });
 
 
