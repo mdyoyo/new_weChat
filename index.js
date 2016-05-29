@@ -60,7 +60,7 @@ var server = http.createServer(function(request,response){
                             hostname: 'api.weixin.qq.com',
                             path: '/cgi-bin/user/info?' +
                             'access_token=' + token +
-                            '&openid=' + openId +
+                            '&openid=' + result.xml.FromUserName[0] +
                             '&lang=zh_CN'
                         };
                         var req = https.get(options,function(res){
