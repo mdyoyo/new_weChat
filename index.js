@@ -76,8 +76,8 @@ var server = http.createServer(function(request,response){
                                 bodyChunks += chunk;
                             });
                             res.on('end',function(){
-                                var imgInfo = JSON.parse(bodyChunks);
-                                console.log(imgInfo);
+//                                var imgInfo = JSON.parse(bodyChunks);
+                                console.log(bodyChunks);
                             })
                         });
                         reqImg.on('error', function (e) {
