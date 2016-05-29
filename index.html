@@ -38,9 +38,9 @@
         var create_time = msg.xml.CreateTime[0];
         console.log(create_time);
         console.log(parseInt(create_time));
-        console.log(parseInt('1464522716'));
+        console.log(new Date(parseInt('1464522716')*1000));//1464523658216
 
-        var date = new Date(1460385054);
+        var date = new Date(parseInt(create_time)*1000);
 //      var theDate = date.toLocaleString();parseInt(create_time)
         console.log(date);
         alert(date.toLocaleString());
