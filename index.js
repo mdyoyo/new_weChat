@@ -54,6 +54,7 @@ var server = http.createServer(function(request,response){
             parseString(postdata,function(err,result){
                 if(!err){
                     if(result.xml.MsgType[0] === 'text'){
+                        console.log(result.xml.CreateTime[0]);
                         var token = getToken(appID, appSecret);
                         console.log("token is _____"+token);
                         var options = {

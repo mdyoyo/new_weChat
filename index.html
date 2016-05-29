@@ -34,10 +34,11 @@
     socket.on('chat message', function(data) {
         var msg = JSON.parse(data);
         var content = msg.xml.Content[0];
-        var create_time = msg.xml.CreateTime[0];
-        var date = new Date(1460385054);
 
-//        var theDate = date.toLocaleString();parseInt(create_time)
+        var create_time = msg.xml.CreateTime[0];
+        console.log(create_time);
+        var date = new Date(1460385054);
+//      var theDate = date.toLocaleString();parseInt(create_time)
         console.log(date);
 alert(date.toLocaleString());
 
