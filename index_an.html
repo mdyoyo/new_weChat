@@ -1,0 +1,85 @@
+<!doctype html>
+<html ng-app="messages">
+<head>
+    <script src="http://apps.bdimg.com/libs/angular.js/1.2.16/angular.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Wx client</title>
+    <style>
+        li {
+            width: 300px;
+            height:60px;
+            margin-bottom:20px;
+        }
+        li> img{
+            width: 70px;
+            height:60px;
+            border-style: outset;
+            margin-bottom:9px;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+        .STYLE2 {font-family: "宋体"}
+        .STYLE4 {
+            font-size: 24px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .STYLE5 {color: #FFFFFF}
+    </style>
+</head>
+
+<body bgcolor='#333333' ng-controller='MsgCtrl'>
+
+
+<h><div align="center" class="STYLE2">
+    <p class="STYLE4"><span class="STYLE5">欢迎上墙</span></p >
+</div>
+</h>
+
+<div id="wrapper" ng-if="msgs.length>0" style="background-color: #FFCCFF;
+    height: auto; padding: 10px; width: 804px; position: absolute;
+    left: 253px; top: 72px; border-style: outset; border-width: 5px;
+    border-color: #CCCCFF">
+    <ul>
+        <li ng-repeat="item in msgs track by $index">
+            {{item.userName}}< img ng-src="{{item.headimg}}">:{{item.content}}
+        </li>
+
+    </ul>
+</div>
+<script src="http://123.206.77.116:9902/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+
+    angular.module('messages',[]).controller('MsgCtrl',function($scope)
+    {
+        $scope.msgs=[];
+        var socket = io.connect('http://123.206.77.116:9902/');
+        var item={
+            userName:"",
+            headimg:"",
+            content:""
+        };
+        socket.on('message',function(msg)
+        {
+            var content = msg.xml.Content[0];
+            msg.user = msg.user || {};
+            var userName = msg.user.nickname;
+            var headimg = msg.user.headimgurl;
+            item={
+                userName:userName,
+                headimg:headimg,
+                content:content
+            };
+            $scope.$apply(function(){
+                $scope.msgs.unshift(item);
+            })
+            console.log($scope.msgs+"hahahah")
+        });
+    })
+
+
+
+</script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app='messages' lang="en">
 <head>
+    <script src="http://apps.bdimg.com/libs/angular.js/1.2.16/angular.min.js"></script>
     <meta charset="UTF-8">
     <title>Wx client</title>
     <link rel="stylesheet" href="/bootstrap.min.css">
@@ -15,15 +16,26 @@
         }
     </style>
 </head>
-<body>
+<body ng-controller='MsgCtrl'>
 <div id="wxWall">
     <div style="text-align: center;">
         <h3 style="color: #ac2925;">微信墙</h3>
     </div>
-    <div id="msg">
-        <div class="well">
+    <div id="msg" ng-if="msgs.length>0">
+        <div class="well" >
             <img src="http://wx.qlogo.cn/mmopen/LdL5tuia2rkziaSR3PB0khvicyEIdNVHzUL0NFcAkavIibIokia9ibwCia744unz7VlsM6rIus50LrILaWM3dCoIePbCPusI19zGF3w/0">
             说：大家好
+        </div>
+        <div class="well" ng-repeat="item in msgs track by $index">
+            <table>
+                <tr>
+                    <td><img src="{{item.headimg}}"></td>
+                    <td>{{item.theDate}}&nbsp;&nbsp;&nbsp; </td>
+                    <td style="text-align: center;color: #660000">{{item.userName}}</td>
+                    <td ng-if="isText=0">说：{{item.content}}</td>
+                    <td ng-if="isText=1">说：<img src="{{item.content}}"></td>
+                </tr>
+            </table>
         </div>
     </div>
 
@@ -31,32 +43,51 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script type="text/javascript">
+    angular.module('messages',[]).controller('MsgCtrl',function($scope)
+    {
+        $scope.msgs=[];
+        var socket = io();
+        var item={
+            theDate:"",
+            userName:"",
+            headimg:"",
+            content:"",
+            isText:1
+        };
+        socket.on('chat message', function(data) {
+            var msg = JSON.parse(data);
 
-    var socket = io();
-    //    var msglist = document.getElementById('msg');
-    socket.on('chat message', function(data) {
-        var msg = JSON.parse(data);
-        var content = msg.xml.Content[0];
-
-        var create_time = msg.xml.CreateTime[0];
-        var date = new Date(parseInt(create_time)*1000);
-        var theDate = date.toLocaleString();
-
-        msg.user = msg.user || {};
-        var userName = msg.user.nickname;
-        var headimg = msg.user.headimgurl;
-
-        var element1 = document.createElement('div');
-        element1.className = 'well';
-
-        element1.innerHTML = '<table> <tr> <td> ' +
-                '<img src="'+ headimg +'"></td> ' +
-                '<td>'+ theDate+ '&nbsp;&nbsp;&nbsp; </td> ' +
-                '<td style="text-align: center;color: #660000">'+ userName +'</td> ' +
-                '<td>说：'+ content +'</td> </tr> </table>';
-//        msglist.appendChild(element1);
-        $('#msg').prepend(element1);
+            var create_time = msg.xml.CreateTime[0];
+            var date = new Date(parseInt(create_time)*1000);
+            var theDate = date.toLocaleString();
+            var content;
+            var isText;
+            msg.user = msg.user || {};
+            var userName = msg.user.nickname;
+            var headimg = msg.user.headimgurl;
+            if(msg.msgType==1) {
+                content = msg.xml.Content[0];
+                isText=1;
+            }else if(msg.msgType==2){
+                var msgImg = msg.xml.PicUrl[0];
+                var mediaId = msg.xml.MediaId[0];
+                content = '/'+mediaId+'.jpg';
+                isText=0;
+            }
+            item={
+                theDate:theDate,
+                userName:userName,
+                headimg:headimg,
+                content:content,
+                isText:isText
+            };
+            $scope.$apply(function(){
+                $scope.msgs.unshift(item);
+            })
+        });
     });
+
+
 
 
 </script>
