@@ -32,8 +32,8 @@
                     <td><img src="{{item.headimg}}"></td>
                     <td>{{item.theDate}}&nbsp;&nbsp;&nbsp; </td>
                     <td style="text-align: center;color: #660000">{{item.userName}}</td>
-                    <td ng-if="item.isText=1">说：{{item.content}}</td>
-                    <td ng-if="item.isText=0">说：<img src="{{item.content}}"></td>
+                    <td ng-if="item.isText">说：{{item.content}}</td>
+                    <td ng-if="!item.isText">说：<img src="{{item.content}}"></td>
                 </tr>
             </table>
         </div>
@@ -52,7 +52,7 @@
             userName:"",
             headimg:"",
             content:"",
-            isText:1
+            isText:""
         };
         socket.on('chat message', function(data) {
             var msg = JSON.parse(data);
@@ -67,12 +67,12 @@
             var headimg = msg.user.headimgurl;
             if(msg.msgType==1) {
                 content = msg.xml.Content[0];
-                isText=1;
+                isText=true;
             }else if(msg.msgType==2){
                 var msgImg = msg.xml.PicUrl[0];
                 var mediaId = msg.xml.MediaId[0];
                 content = '/'+mediaId+'.jpg';
-                isText=0;
+                isText=false;
             }
             item={
                 theDate:theDate,
