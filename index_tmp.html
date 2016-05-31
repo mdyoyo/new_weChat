@@ -3,7 +3,7 @@
 <head>
     <script src="http://apps.bdimg.com/libs/angular.js/1.2.16/angular.min.js"></script>
     <meta charset="UTF-8">
-    <title>Wx client</title>
+    <title>weChat Wall</title>
     <link rel="stylesheet" href="/bootstrap.min.css">
     <style>
         .well {
@@ -22,10 +22,7 @@
         <h3 style="color: #ac2925;">微信墙</h3>
     </div>
     <div id="msg" ng-if="msgs.length>0">
-        <div class="well" >
-            <img src="http://wx.qlogo.cn/mmopen/LdL5tuia2rkziaSR3PB0khvicyEIdNVHzUL0NFcAkavIibIokia9ibwCia744unz7VlsM6rIus50LrILaWM3dCoIePbCPusI19zGF3w/0">
-            说：大家好
-        </div>
+
         <div class="well" ng-repeat="item in msgs track by $index">
             <table>
                 <tr>
@@ -86,9 +83,6 @@
             })
         });
     });
-
-
-
 
 </script>
 </body>
