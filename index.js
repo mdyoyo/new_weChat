@@ -64,33 +64,12 @@ var server = http.createServer(function(request,response){
                         console.log(mediaId);
                         console.log(result.xml.PicUrl[0]);
                         var request1 = require('request');
-//                        var fs = require('fs');
+                        //保存图片
                         request1('http://file.api.weixin.qq.com/cgi-bin/media/get?' +
                             'access_token='+token+
                             '&media_id=' + mediaId).pipe(fs.createWriteStream('public/'+mediaId+'.jpg'));
-//                        var getImgOptions = {
-//                            hostname: 'api.weixin.qq.com',
-//                            path: '/cgi-bin/media/get?' +
-//                            'access_token=' + token +
-//                            '&media_id=' + mediaId
-//                        };
-//                        //向微信服务器发送请求，得到用户信息
-//                        var reqImg = https.get(getImgOptions,function(res){
-//                            var bodyChunks = '';
-//                            res.on('data',function(chunk){
-//                                bodyChunks += chunk;
-//                            });
-//                            res.on('end',function(){
-////                                var imgInfo = JSON.parse(bodyChunks);
-////                                console.log(bodyChunks);
-//                                fs.writeFileSync('public/'+mediaId+'.jpg',bodyChunks);
-//                            })
-//                        });
-//                        reqImg.on('error', function (e) {
-//                            console.log('ERROR: ' + e.message);
-//                        });
                     }
-//                    var token = getToken(appID, appSecret);//得到access_token
+
                     var options = {
                         hostname: 'api.weixin.qq.com',
                         path: '/cgi-bin/user/info?' +
@@ -129,7 +108,7 @@ var path = require('path');
 app.use(require('express').static(path.join(__dirname,'public')));
 
 app.get('/', function(req, res){
-    res.sendfile('index_tmp.html');
+    res.sendfile('index_an.html');
 });
 io.on('connection', function(socket){
     console.log('a user connected');

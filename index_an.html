@@ -1,84 +1,88 @@
-<!doctype html>
-<html ng-app="messages">
+<!DOCTYPE html>
+<html ng-app='messages' lang="en">
 <head>
     <script src="http://apps.bdimg.com/libs/angular.js/1.2.16/angular.min.js"></script>
     <meta charset="UTF-8">
-    <title>Wx client</title>
+    <title>weChat Wall</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
     <style>
-        li {
-            width: 300px;
-            height:60px;
-            margin-bottom:20px;
+        .well {
+            margin-left:20px;
+            margin-right:20px;
         }
-        li> img{
-            width: 70px;
-            height:60px;
-            border-style: outset;
-            margin-bottom:9px;
-            vertical-align: middle;
-            display: inline-block;
+        .well img{
+            width:60px;
+            margin-right:15px;
         }
-
-        .STYLE2 {font-family: "宋体"}
-        .STYLE4 {
-            font-size: 24px;
-            text-align: center;
-            font-weight: bold;
-        }
-        .STYLE5 {color: #FFFFFF}
     </style>
 </head>
+<body ng-controller='MsgCtrl'>
+<div id="wxWall">
+    <div style="text-align: center;">
+        <h3 style="color: #ac2925;">微信墙</h3>
+    </div>
+    <div id="msg" ng-if="msgs.length>0">
 
-<body bgcolor='#333333' ng-controller='MsgCtrl'>
+        <div class="well" ng-repeat="item in msgs track by $index">
+            <table>
+                <tr>
+                    <td><img src="{{item.headimg}}"></td>
+                    <td>{{item.theDate}}&nbsp;&nbsp;&nbsp; </td>
+                    <td style="text-align: center;color: #660000">{{item.userName}}</td>
+                    <td ng-if="item.isText">说：{{item.content}}</td>
+                    <td ng-if="!item.isText">说：<img src="{{item.content}}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
-
-<h><div align="center" class="STYLE2">
-    <p class="STYLE4"><span class="STYLE5">欢迎上墙</span></p >
 </div>
-</h>
-
-<div id="wrapper" ng-if="msgs.length>0" style="background-color: #FFCCFF;
-    height: auto; padding: 10px; width: 804px; position: absolute;
-    left: 253px; top: 72px; border-style: outset; border-width: 5px;
-    border-color: #CCCCFF">
-    <ul>
-        <li ng-repeat="item in msgs track by $index">
-            {{item.userName}}< img ng-src="{{item.headimg}}">:{{item.content}}
-        </li>
-
-    </ul>
-</div>
-<script src="http://123.206.77.116:9902/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script type="text/javascript">
-
     angular.module('messages',[]).controller('MsgCtrl',function($scope)
     {
         $scope.msgs=[];
-        var socket = io.connect('http://123.206.77.116:9902/');
+        var socket = io();
         var item={
+            theDate:"",
             userName:"",
             headimg:"",
-            content:""
+            content:"",
+            isText:""
         };
-        socket.on('message',function(msg)
-        {
-            var content = msg.xml.Content[0];
+        socket.on('chat message', function(data) {
+            var msg = JSON.parse(data);
+
+            var create_time = msg.xml.CreateTime[0];
+            var date = new Date(parseInt(create_time)*1000);
+            var theDate = date.toLocaleString();
+            var content;
+            var isText;
             msg.user = msg.user || {};
             var userName = msg.user.nickname;
             var headimg = msg.user.headimgurl;
+            if(msg.msgType==1) {
+                content = msg.xml.Content[0];
+                isText=true;
+            }else if(msg.msgType==2){
+                var msgImg = msg.xml.PicUrl[0];
+                var mediaId = msg.xml.MediaId[0];
+                content = '/'+mediaId+'.jpg';
+                isText=false;
+            }
             item={
+                theDate:theDate,
                 userName:userName,
                 headimg:headimg,
-                content:content
+                content:content,
+                isText:isText
             };
             $scope.$apply(function(){
                 $scope.msgs.unshift(item);
             })
-            console.log($scope.msgs+"hahahah")
         });
-    })
-
-
+    });
 
 </script>
 </body>
